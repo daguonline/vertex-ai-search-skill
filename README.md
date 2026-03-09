@@ -24,17 +24,18 @@ Este repositorio es un **skill** definitivo (guía procedimental y herramientas)
 │   ├── gemini_definitive_guide_es.md  # Guía maestra de Gemini 2.5/3 [NUEVO]
 │   ├── conceptos.md                   # Teoría de búsqueda vectorial
 │   └── guia_rapida.md                 # Referencia de código
-├── examples/
-│   ├── intro_multimodal_rag_es.ipynb  # RAG avanzado con PyMuPDF [NUEVO]
-│   ├── multimodal_retail_recommendations_es.ipynb # Recomendaciones visuales [NUEVO]
-│   ├── intro_multimodal_use_cases_es.ipynb # Casos de uso multimodales
-│   ├── 01_semantic_search.py
-│   └── 02_hybrid_search.py
-└── scripts/
-    ├── embeddings.py                 # Generar embeddings densos y dispersos
-    ├── vector_search.py              # Gestión de índices y endpoints
-    └── hybrid_search.py              # Fusión RRF
-```
+### Ejemplos y Guías (Directorio `examples/`)
+
+Contenido maestro traducido y adaptado:
+- [**Multimodal RAG**](examples/intro_multimodal_rag_es.ipynb): RAG avanzado con PyMuPDF.
+- [**Recomendaciones Retail**](examples/multimodal_retail_recommendations_es.ipynb): Recomendaciones visuales.
+- [**Casos de Uso Multimodales**](examples/intro_multimodal_use_cases_es.ipynb): Capacidades multimodales.
+- [**Text Embeddings & Vector Search**](examples/intro_textemb_vectorsearch_es.ipynb): Búsqueda semántica.
+- [**Búsqueda Híbrida**](examples/hybrid_search_es.ipynb): Combinando semántica y keywords.
+- [**Clasificación con BERT**](examples/classify_text_bert_es.ipynb): Análisis de sentimientos.
+- [**Subtitulado de Imágenes**](examples/image_captioning_es.ipynb): Generación de texto con atención.
+
+---
 
 ## 🚀 Inicio Rápido
 
