@@ -1,32 +1,39 @@
-# 🔍 Vertex AI Vector Search Skill
+# 🚀 Gemini Ultimate Procedural Skill
 
-Un conjunto de scripts, ejemplos y documentación reutilizable para implementar **búsqueda semántica**, **búsqueda por tokens** y **búsqueda híbrida** con Google Cloud Vertex AI Vector Search.
+La **Gemini Ultimate Procedural Skill** es un repositorio de nivel experto diseñado para implementar flujos de IA de vanguardia usando **Gemini 3.1** y **Vertex AI Vector Search**. 
+
+Este proyecto ha evolucionado de una simple herramienta de búsqueda vectorial a una solución completa para **Multimodal RAG**, **Enterprise Search** y **Razonamiento Avanzado**.
 
 ## ¿Qué es esto?
 
-Este repositorio es un **skill** (conjunto de instrucciones y herramientas) que permite a cualquier desarrollador o agente de IA implementar rápidamente un sistema de búsqueda inteligente basado en:
+Este repositorio es un **skill** definitivo (guía procedimental y herramientas) que cubre:
 
-- **Embeddings densos** (búsqueda semántica): Encuentran contenido por *significado*, no por palabras exactas.
-- **Embeddings dispersos** (búsqueda por tokens): Encuentran contenido por *palabras clave exactas* usando TF-IDF.
-- **Búsqueda híbrida**: Combina ambos enfoques para máxima calidad de resultados.
+- **Búsqueda Multimodal**: Indexación y búsqueda en texto, imágenes y tablas simultáneamente.
+- **Multimodal RAG**: Generación aumentada por recuperación que "entiende" gráficos y fotos en documentos PDF complejos.
+- **Razonamiento Avanzado**: Uso de `thinking_level` de Gemini 3.1 Pro para tareas que requieren lógica profunda.
+- **Patrones Enterprise**: Implementación de Context Caching, Batch Prediction y Salida Estructurada (JSON).
+- **Búsqueda Híbrida**: Fusión de significado semántico y palabras clave (RRF).
 
 ## 📁 Estructura del Repositorio
 
 ```
-├── SKILL.md                  # Instrucciones paso a paso
-├── README.md                 # Este archivo
-├── requirements.txt          # Dependencias Python
-├── scripts/
-│   ├── embeddings.py         # Generar embeddings densos y dispersos
-│   ├── vector_search.py      # Crear índices, endpoints, consultar
-│   └── hybrid_search.py      # Búsqueda híbrida con RRF
+├── SKILL.md                          # Guía técnica principal del Skill
+├── README.md                         # Este archivo
+├── requirements.txt                  # Dependencias Python
+├── resources/
+│   ├── gemini_definitive_guide_es.md  # Guía maestra de Gemini 2.5/3 [NUEVO]
+│   ├── conceptos.md                   # Teoría de búsqueda vectorial
+│   └── guia_rapida.md                 # Referencia de código
 ├── examples/
-│   ├── 01_semantic_search.py  # Ejemplo: búsqueda semántica end-to-end
-│   ├── 02_hybrid_search.py    # Ejemplo: búsqueda híbrida end-to-end
-│   └── 03_cleanup.py          # Ejemplo: limpieza de recursos
-└── resources/
-    ├── conceptos.md           # Explicación teórica detallada
-    └── guia_rapida.md         # Referencia rápida de código
+│   ├── intro_multimodal_rag_es.ipynb  # RAG avanzado con PyMuPDF [NUEVO]
+│   ├── multimodal_retail_recommendations_es.ipynb # Recomendaciones visuales [NUEVO]
+│   ├── intro_multimodal_use_cases_es.ipynb # Casos de uso multimodales
+│   ├── 01_semantic_search.py
+│   └── 02_hybrid_search.py
+└── scripts/
+    ├── embeddings.py                 # Generar embeddings densos y dispersos
+    ├── vector_search.py              # Gestión de índices y endpoints
+    └── hybrid_search.py              # Fusión RRF
 ```
 
 ## 🚀 Inicio Rápido
@@ -35,6 +42,7 @@ Este repositorio es un **skill** (conjunto de instrucciones y herramientas) que 
 
 ```bash
 pip install -r requirements.txt
+pip install pymupdf  # Requerido para RAG Multimodal
 ```
 
 ### 2. Configurar credenciales
@@ -44,34 +52,28 @@ gcloud auth login
 gcloud config set project TU_PROYECTO_ID
 ```
 
-### 3. Ejecutar un ejemplo
+### 3. Explorar la Habilidad Definitiva
+Se recomienda comenzar por la [Guía Maestra de Gemini](resources/gemini_definitive_guide_es.md) para entender cómo configurar los niveles de razonamiento y el caching.
 
-```bash
-python examples/01_semantic_search.py
-```
+## 📚 Documentación Principal
 
-## 📚 Documentación
+- **[SKILL.md](SKILL.md)**: El flujo de trabajo completo del Skill.
+- **[resources/gemini_definitive_guide_es.md](resources/gemini_definitive_guide_es.md)**: Todo sobre Gemini 3.1 y patrones Enterprise.
 
-- **[SKILL.md](SKILL.md)**: Instrucciones detalladas paso a paso
-- **[resources/conceptos.md](resources/conceptos.md)**: Explicación teórica completa
-- **[resources/guia_rapida.md](resources/guia_rapida.md)**: Referencia rápida de código
+## 🧠 Conceptos Avanzados
 
-## 🧠 Conceptos Clave
-
-| Concepto | Descripción |
+| Concepto | Aplicación |
 |----------|-------------|
-| **Embedding** | Representación numérica del significado de un texto (vector de N dimensiones) |
-| **Vector Search** | Base de datos optimizada para buscar vectores similares en milisegundos |
-| **Index** | La estructura de datos que almacena los embeddings |
-| **Endpoint** | El servidor que recibe las consultas |
-| **RRF** | Reciprocal Rank Fusion: algoritmo para fusionar rankings de búsqueda semántica y por tokens |
+| **Thinking Level** | Controla el razonamiento profundo en Gemini 3.1 |
+| **Multimodal RAG** | Extrae y "lee" gráficos de tus PDF automáticamente |
+| **Context Caching** | Reduce costos de tokens en corpus masivos |
+| **Structured Output** | Asegura que la IA responda en JSON puro para apps |
 
 ## ⚠️ Importante
 
-- **Costos**: Los Index Endpoints generan costos mientras estén activos. Siempre ejecuta la limpieza.
-- **Regiones**: Asegúrate de usar una región que soporte Vector Search.
-- **Cuotas**: La API de embeddings tiene límites de velocidad. Los scripts incluyen control de cuota.
+- **Cuotas**: Los modelos Gemini 3 tienen límites de Rate Limit específicos por tier.
+- **Limpieza**: Los Index Endpoints de Vertex AI son facturables por hora. Usa `03_cleanup.py` al terminar.
 
 ## 📄 Licencia
 
-Apache License 2.0 - Basado en los tutoriales oficiales de Google Cloud.
+Apache License 2.0 - Basado en los reportes técnicos de Gemini y tutoriales de Google Cloud.
