@@ -1,11 +1,9 @@
----
-name: Vertex AI Vector Search
-description: Skill para implementar búsqueda semántica, por tokens e híbrida con Vertex AI Vector Search y Embeddings.
----
+name: Vertex AI Gemini Ultimate Skill
+description: Skill definitiva para implementar búsqueda semántica, multimodal e híbrida con Vertex AI Vector Search y Gemini 3.1.
 
-# Vertex AI Vector Search Skill
+# Vertex AI Gemini Ultimate Skill
 
-Este skill te permite implementar búsqueda vectorial (semántica, por tokens e híbrida) en cualquier aplicación usando Google Cloud Vertex AI.
+Este skill definitivo te permitirá implementar flujos de búsqueda vectorial de última generación (semántica, por tokens, híbrida y **multimodal**) usando Gemini 3.1 en Google Cloud Vertex AI.
 
 ## Requisitos Previos
 
@@ -91,7 +89,7 @@ from scripts.vector_search import create_index, create_endpoint, deploy_index
 my_index = create_index(
     display_name="mi-indice",
     bucket_uri=BUCKET_URI,
-    dimensions=768  # 768 para text-embedding-005, 3072 para gemini-embedding-001
+    dimensions=3072  # Recomendado: 3072 para multimodal-embedding-001 o gemini-embedding-001
 )
 
 # Crear endpoint
@@ -131,6 +129,31 @@ cleanup(my_endpoint, my_index, BUCKET_URI)
 | **Semántica** | Buscar por significado | "¿Cómo leer archivos?" encuentra docs sobre parsing JSON |
 | **Por Tokens** | Buscar por palabras exactas | "SKU-12345" encuentra ese producto específico |
 | **Híbrida** | Combinar ambas ventajas | "Kids sunglasses" encuentra tanto por palabra "Kids" como por significado "Youth" |
+
+## Patrones Avanzados (Habilidad Definitiva)
+
+### 1. Razonamiento Profundo (Thinking Level)
+Para búsquedas que requieren analizar lógica compleja (ej: discrepancias legales):
+```python
+config = GenerateContentConfig(thinking_config={"thinking_level": "high"})
+response = client.models.generate_content(model="gemini-3.1-pro", contents=query, config=config)
+```
+
+### 2. RAG Multimodal con PyMuPDF
+No proceses solo texto. Si el documento tiene gráficos o tablas:
+- Usa `PyMuPDF` para extraer bloques visuales.
+- Usa `multimodal-embedding-001` para indexarlos.
+
+### 3. Salida Escructurada para Automatización
+Asegura que tu sistema de búsqueda devuelva JSON puro:
+```python
+config = GenerateContentConfig(response_mime_type="application/json")
+```
+
+### 4. Búsqueda con Context Caching
+Si consultas repetidamente el mismo corpus masivo (ej: 1M+ tokens), habilita **Context Caching** para reducir latencia y costo drásticamente.
+
+---
 
 ## Parámetro `rrf_ranking_alpha` (solo búsqueda híbrida)
 
