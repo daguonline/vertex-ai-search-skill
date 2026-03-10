@@ -1,22 +1,26 @@
-# Guía de la Gemini Ultimate Procedural Skill
+# Guía de Modelos Gemini y Patrones Enterprise
 
-Esta guía consolida los aprendizajes de los reportes técnicos oficiales y las mejores prácticas de implementación para crear aplicaciones de IA de vanguardia.
+Esta guía consolida los aprendizajes de los reportes técnicos oficiales y las mejores prácticas de implementación.
 
-## 1. Evolución de Modelos: Gemini 2.5 vs Gemini 3
+## 1. Modelos Gemini Disponibles en Vertex AI
 
-### Gemini 2.5 (Pro y Flash)
-- **Ventana de Contexto**: Hasta 1 millón de tokens nativos.
-- **Multimodalidad**: Procesamiento fluido de hasta 3 horas de video, audio de larga duración y documentos PDF complejos.
-- **Modelo Flash**: Optimizado para tareas de alta frecuencia, priorizando la latencia sin sacrificar capacidades multimodales.
+### Gemini 2.5 (Estable)
+- **`gemini-2.5-flash`**: Optimizado para tareas de alta frecuencia. Baja latencia, ideal para producción.
+- **`gemini-2.5-pro`**: Ventana de contexto de hasta 1M de tokens. Procesamiento de video (3h), audio largo y PDFs complejos.
 
-### Gemini 3 y 3.1
-- **Gemini 3 Pro**: El modelo más inteligente de Google, con razonamiento avanzado y soporte nativo para agentes.
-- **Gemini 3.1 Pro**: Doble rendimiento en razonamiento (`ARC-AGI-2`) comparado con la serie 3.0.
-- **Pensamiento Dinámico**: Introducción de niveles de pensamiento controlables para equilibrar calidad y costo.
+### Gemini 3 (Preview)
+- **`gemini-3.1-pro-preview`**: El modelo más avanzado de Google en razonamiento. Doble rendimiento en benchmarks de razonamiento (`ARC-AGI-2`) vs la serie 3.0.
+- **Pensamiento Dinámico**: Niveles de pensamiento controlables para equilibrar calidad y costo.
+
+> **Nota**: Los modelos preview (`-preview`) pueden cambiar sin previo aviso. Para producción, usar las versiones estables (2.5).
+
+### Embeddings
+- **`gemini-embedding-001`**: 3072 dimensiones. Recomendado para búsqueda semántica y RAG.
+- **`multimodal-embedding-001`**: Embeddings combinados de texto + imagen.
 
 ---
 
-## 2. Parámetros Críticos para la Habilidad Definitiva
+## 2. Parámetros Críticos
 
 ### Configuración de Pensamiento (`thinking_config`)
 Permite controlar qué tanto "reflexiona" el modelo antes de responder.
@@ -26,7 +30,6 @@ Permite controlar qué tanto "reflexiona" el modelo antes de responder.
 - `high`: Razonamiento profundo (default para Gemini 3.1 en tareas complejas).
 
 ```python
-# Ejemplo de uso en el SDK
 config = GenerateContentConfig(
     thinking_config={"thinking_level": "high"}
 )
@@ -38,20 +41,21 @@ Crucial para búsquedas multimodales en videos y audios largos.
 
 ---
 
-## 3. Patrones Enterprise y RAG Multimodal
+## 3. Patrones Enterprise
 
 ### Context Caching
 Para optimizar costos en ventanas de contexto gigantes (1M+ tokens).
 - **Caso de uso**: Bases de código completas o bibliotecas de documentos PDF que se consultan repetidamente.
 
-### RAG Multimodal con PyMuPDF
-No te limites a extraer texto. Usa un enfoque híbrido:
-1. **Extracción**: Usa `PyMuPDF` para separar texto de imágenes/tablas.
-2. **Embeddings**: Genera **Multimodal Embeddings** para que el sistema "entienda" tanto el gráfico como el texto que lo describe.
-3. **Etiquetado**: En el prompt, etiqueta las opciones (ej: "Imagen 1: Gráfico de ventas") para reducir alucinaciones visuales.
+### RAG Multimodal
+Flujo completo para documentos con contenido mixto:
+1. **Extracción**: Usa `PyMuPDF` para separar texto de imágenes/tablas del PDF.
+2. **Descripción**: Gemini genera descripciones textuales de cada imagen/tabla extraída.
+3. **Embeddings**: Genera embeddings multimodales para indexar tanto el contenido visual como el textual.
+4. **Etiquetado**: En el prompt, etiqueta las opciones (ej: "Imagen 1: Gráfico de ventas") para reducir alucinaciones visuales.
 
 ### Salida Estructurada (JSON)
-Para integrar Gemini en flujos automatizados de retail o búsqueda:
+Para integrar Gemini en flujos automatizados:
 ```python
 config = GenerateContentConfig(
     response_mime_type="application/json"
@@ -61,5 +65,7 @@ config = GenerateContentConfig(
 ---
 
 ## 4. Mejores Prácticas de Búsqueda
-- **Ranking RRF**: Combina búsqueda semántica (densos) y por tokens (dispersos) con un alpha de `0.5`.
-- **Reasoning**: Para búsquedas que requieren lógica (ej: encontrar discrepancias en contratos), usa **Gemini 3.1 Pro** con `thinking_level="high"`.
+- **Ranking RRF**: Combina búsqueda semántica y por tokens con `rrf_ranking_alpha=0.5`.
+- **Reasoning**: Para búsquedas con lógica compleja (ej: discrepancias en contratos), usa `gemini-3.1-pro-preview` con `thinking_level="high"`.
+- **Temperatura baja (0.2)**: Para comparación de imágenes y extracción precisa de datos.
+- **Temperatura media (0.4-0.6)**: Para descripciones creativas de video o generación de contenido.

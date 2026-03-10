@@ -1,81 +1,70 @@
 # 🚀 Gemini Ultimate Procedural Skill
 
-La **Gemini Ultimate Procedural Skill** es un repositorio de nivel experto diseñado para implementar flujos de IA de vanguardia usando **Gemini 3.1** y **Vertex AI Vector Search**. 
+Repositorio de nivel experto para implementar flujos de IA con **Gemini** y **Vertex AI Vector Search**: búsqueda semántica, híbrida, multimodal, y RAG sobre documentos complejos.
 
-Este proyecto ha evolucionado de una simple herramienta de búsqueda vectorial a una solución completa para **Multimodal RAG**, **Enterprise Search** y **Razonamiento Avanzado**.
+## ¿Qué incluye?
 
-## ¿Qué es esto?
+| Capacidad | Descripción |
+|-----------|-------------|
+| **Búsqueda Semántica** | Encontrar documentos por significado usando embeddings densos |
+| **Búsqueda Híbrida** | Fusión de significado + palabras clave con Reciprocal Rank Fusion |
+| **Multimodal RAG** | Extraer y entender tablas, gráficos e imágenes de PDFs complejos |
+| **Razonamiento Avanzado** | Uso de `thinking_level` en Gemini 3.1 Pro para lógica profunda |
+| **Salida Estructurada** | Respuestas en JSON puro para integración con aplicaciones |
 
-Este repositorio es un **skill** definitivo (guía procedimental y herramientas) que cubre:
-
-- **Búsqueda Multimodal**: Indexación y búsqueda en texto, imágenes y tablas simultáneamente.
-- **Multimodal RAG**: Generación aumentada por recuperación que "entiende" gráficos y fotos en documentos PDF complejos.
-- **Razonamiento Avanzado**: Uso de `thinking_level` de Gemini 3.1 Pro para tareas que requieren lógica profunda.
-- **Patrones Enterprise**: Implementación de Context Caching, Batch Prediction y Salida Estructurada (JSON).
-- **Búsqueda Híbrida**: Fusión de significado semántico y palabras clave (RRF).
-
-## 📁 Estructura del Repositorio
+## 📁 Estructura
 
 ```
-├── SKILL.md                          # Guía técnica principal del Skill
-├── README.md                         # Este archivo
-├── requirements.txt                  # Dependencias Python
+├── SKILL.md              # Guía técnica principal (paso a paso)
+├── README.md             # Este archivo
+├── requirements.txt      # Dependencias Python
+├── scripts/
+│   ├── embeddings.py     # Embeddings densos (Gemini) y dispersos (TF-IDF)
+│   ├── vector_search.py  # Índices, endpoints, consultas y limpieza
+│   └── hybrid_search.py  # Búsqueda híbrida con RRF
 ├── resources/
-│   ├── gemini_definitive_guide_es.md  # Guía maestra de Gemini 2.5/3 [NUEVO]
-│   ├── conceptos.md                   # Teoría de búsqueda vectorial
-│   └── guia_rapida.md                 # Referencia de código
-### Ejemplos y Guías (Directorio `examples/`)
-
-Contenido maestro traducido y adaptado:
-- [**Multimodal RAG**](examples/intro_multimodal_rag_es.ipynb): RAG avanzado con PyMuPDF.
-- [**Rich Documents Challenge**](examples/inspect_rich_documents_es.ipynb): Solución al desafío de documentos complejos con tablas y gráficos.
-- [**Recomendaciones Retail**](examples/multimodal_retail_recommendations_es.ipynb): Recomendaciones visuales.
-- [**Casos de Uso Multimodales**](examples/intro_multimodal_use_cases_es.ipynb): Capacidades multimodales.
-- [**Text Embeddings & Vector Search**](examples/intro_textemb_vectorsearch_es.ipynb): Búsqueda semántica.
-- [**Búsqueda Híbrida**](examples/hybrid_search_es.ipynb): Combinando semántica y keywords.
-- [**Clasificación con BERT**](examples/classify_text_bert_es.ipynb): Análisis de sentimientos.
-- [**Subtitulado de Imágenes**](examples/image_captioning_es.ipynb): Generación de texto con atención.
-
----
+│   ├── conceptos.md      # Teoría: embeddings, Vector Search, búsqueda híbrida
+│   └── gemini_definitive_guide_es.md  # Guía de modelos Gemini y patrones enterprise
+└── examples/
+    ├── 01_semantic_search.py   # Ejemplo ejecutable de búsqueda semántica
+    ├── 02_hybrid_search.py     # Ejemplo ejecutable de búsqueda híbrida
+    ├── 03_cleanup.py           # Limpieza de recursos
+    └── *_es.ipynb              # Notebooks traducidos al español (7 labs)
+```
 
 ## 🚀 Inicio Rápido
 
-### 1. Instalar dependencias
-
 ```bash
+# 1. Instalar dependencias
 pip install -r requirements.txt
-pip install pymupdf  # Requerido para RAG Multimodal
-```
 
-### 2. Configurar credenciales
-
-```bash
+# 2. Configurar credenciales de Google Cloud
 gcloud auth login
 gcloud config set project TU_PROYECTO_ID
 ```
 
-### 3. Explorar la Habilidad Definitiva
-Se recomienda comenzar por la [Guía Maestra de Gemini](resources/gemini_definitive_guide_es.md) para entender cómo configurar los niveles de razonamiento y el caching.
+Después, sigue la guía paso a paso en **[SKILL.md](SKILL.md)**.
 
-## 📚 Documentación Principal
+## 📓 Notebooks de Ejemplo
 
-- **[SKILL.md](SKILL.md)**: El flujo de trabajo completo del Skill.
-- **[resources/gemini_definitive_guide_es.md](resources/gemini_definitive_guide_es.md)**: Todo sobre Gemini 3.1 y patrones Enterprise.
+Todos los notebooks están traducidos al español con explicaciones detalladas:
 
-## 🧠 Conceptos Avanzados
-
-| Concepto | Aplicación |
-|----------|-------------|
-| **Thinking Level** | Controla el razonamiento profundo en Gemini 3.1 |
-| **Multimodal RAG** | Extrae y "lee" gráficos de tus PDF automáticamente |
-| **Context Caching** | Reduce costos de tokens en corpus masivos |
-| **Structured Output** | Asegura que la IA responda en JSON puro para apps |
+| Notebook | Tema |
+|----------|------|
+| [intro_multimodal_use_cases_es](examples/intro_multimodal_use_cases_es.ipynb) | Capacidades multimodales de Gemini |
+| [multimodal_retail_recommendations_es](examples/multimodal_retail_recommendations_es.ipynb) | Recomendaciones visuales para retail |
+| [intro_multimodal_rag_es](examples/intro_multimodal_rag_es.ipynb) | RAG multimodal con PyMuPDF |
+| [intro_textemb_vectorsearch_es](examples/intro_textemb_vectorsearch_es.ipynb) | Text embeddings y Vector Search |
+| [hybrid_search_es](examples/hybrid_search_es.ipynb) | Búsqueda híbrida semántica + keywords |
+| [classify_text_bert_es](examples/classify_text_bert_es.ipynb) | Clasificación de texto con BERT |
+| [image_captioning_es](examples/image_captioning_es.ipynb) | Subtitulado automático de imágenes |
 
 ## ⚠️ Importante
 
-- **Cuotas**: Los modelos Gemini 3 tienen límites de Rate Limit específicos por tier.
-- **Limpieza**: Los Index Endpoints de Vertex AI son facturables por hora. Usa `03_cleanup.py` al terminar.
+- **Costos**: Los Index Endpoints de Vector Search se facturan por hora. Siempre ejecuta `03_cleanup.py` al terminar.
+- **Cuotas**: Los modelos Gemini en preview pueden tener límites de Rate Limit por tier.
+- **Modelos soportados**: Compatible con `gemini-2.5-flash`, `gemini-2.5-pro`, `gemini-3.1-pro-preview`, y `gemini-embedding-001`.
 
 ## 📄 Licencia
 
-Apache License 2.0 - Basado en los reportes técnicos de Gemini y tutoriales de Google Cloud.
+Apache License 2.0

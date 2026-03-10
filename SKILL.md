@@ -1,9 +1,11 @@
+---
 name: Gemini Ultimate Procedural Skill
-description: Skill definitiva para implementar búsqueda semántica, multimodal e híbrida con Vertex AI Vector Search y Gemini 3.1.
+description: Skill para implementar búsqueda semántica, multimodal e híbrida con Vertex AI Vector Search y Gemini.
+---
 
 # Gemini Ultimate Procedural Skill
 
-Este skill definitivo te permitirá implementar flujos de búsqueda vectorial de última generación (semántica, por tokens, híbrida y **multimodal**) usando Gemini 3.1 en Google Cloud Vertex AI.
+Guía paso a paso para implementar flujos de búsqueda vectorial (semántica, por tokens, híbrida y multimodal) usando Gemini en Google Cloud Vertex AI.
 
 ## Requisitos Previos
 
@@ -89,7 +91,7 @@ from scripts.vector_search import create_index, create_endpoint, deploy_index
 my_index = create_index(
     display_name="mi-indice",
     bucket_uri=BUCKET_URI,
-    dimensions=3072  # Recomendado: 3072 para multimodal-embedding-001 o gemini-embedding-001
+    dimensions=3072  # 3072 para gemini-embedding-001
 )
 
 # Crear endpoint
@@ -128,25 +130,47 @@ cleanup(my_endpoint, my_index, BUCKET_URI)
 |------|------------|---------|
 | **Semántica** | Buscar por significado | "¿Cómo leer archivos?" encuentra docs sobre parsing JSON |
 | **Por Tokens** | Buscar por palabras exactas | "SKU-12345" encuentra ese producto específico |
-| **Híbrida** | Combinar ambas ventajas | "Kids sunglasses" encuentra tanto por palabra "Kids" como por significado "Youth" |
+| **Híbrida** | Combinar ambas ventajas | "Kids sunglasses" encuentra por palabra "Kids" y por significado "Youth" |
 
-## Patrones Avanzados (Habilidad Definitiva)
+## Patrones Avanzados
 
 ### 1. Razonamiento Profundo (Thinking Level)
 Para búsquedas que requieren analizar lógica compleja (ej: discrepancias legales):
 ```python
 config = GenerateContentConfig(thinking_config={"thinking_level": "high"})
-response = client.models.generate_content(model="gemini-3.1-pro", contents=query, config=config)
+response = client.models.generate_content(
+    model="gemini-3.1-pro-preview",
+    contents=query,
+    config=config
+)
 ```
 
 ### 2. RAG Multimodal Avanzado
 Para documentos con contenido mixto (tablas, diagramas, imágenes):
-- **Extracción de Metadatos**: Usa `get_document_metadata` con sus 4 argumentos clave:
-  ```python
-  text_df, img_df = get_document_metadata(model, pdf_path, save_dir, prompt)
-  ```
-- **Búsqueda Semántica de Fragmentos**: Recupera fragmentos (chunks) usando similitud de coseno.
-- **Construcción de Contexto**: Une los fragmentos recuperados en un solo string de contexto antes de enviarlo a Gemini para mayor fidelidad.
+
+**Extracción de Metadatos** — Usa `get_document_metadata` con sus 4 argumentos:
+```python
+from utils.intro_multimodal_rag_utils import get_document_metadata
+
+text_df, img_df = get_document_metadata(
+    model,          # El modelo generativo (ej: GenerativeModel("gemini-2.5-flash"))
+    pdf_path,       # Carpeta con los PDFs
+    save_dir,       # Carpeta donde guardar imágenes extraídas
+    prompt           # Prompt para describir cada imagen
+)
+```
+
+**Búsqueda y Generación**:
+```python
+# 1. Recuperar fragmentos relevantes
+chunks = get_similar_text_from_query(query, text_metadata_df)
+
+# 2. Construir contexto (unir fragmentos como string)
+context = "\n".join([v['chunk_text'] for k, v in chunks.items()])
+
+# 3. Generar respuesta con Gemini
+get_gemini_response(model, model_input=prompt, stream=True)
+```
 
 ### 3. Salida Estructurada para Automatización
 Asegura que tu sistema de búsqueda devuelva JSON puro:
@@ -155,17 +179,7 @@ config = GenerateContentConfig(response_mime_type="application/json")
 ```
 
 ### 4. Búsqueda con Context Caching
-Si consultas repetidamente el mismo corpus masivo (ej: 1M+ tokens), habilita **Context Caching** para reducir latencia y costo drásticamente.
-
----
-
-## 🛠️ Solución de Errores Comunes
-
-| Error | Causa | Solución |
-|-------|-------|----------|
-| `TypeError: get_document_metadata() missing...` | Falta de argumentos posicionales. | Pasar: `(modelo, folder_pdf, folder_save, prompt)`. |
-| `TypeError: 'dict' object is not subscriptable` | Intentar `chunks[0]` en un diccionario. | Usar `for key, value in chunks.items()` o `list(chunks.values())[0]`. |
-| `FileNotFoundError: Google_Branding/` | Las imágenes no se han descargado o la carpeta no existe. | Ejecutar `!gsutil -m rsync -r gs://spls/gsp520 .` primero. |
+Si consultas repetidamente el mismo corpus masivo (1M+ tokens), habilita **Context Caching** para reducir latencia y costo drásticamente.
 
 ---
 
@@ -175,10 +189,49 @@ Si consultas repetidamente el mismo corpus masivo (ej: 1M+ tokens), habilita **C
 - `0.0` = Solo resultados por tokens (dispersos)
 - `0.5` = Peso equilibrado entre ambos (recomendado para empezar)
 
+---
+
+## 🛠️ Errores Comunes y Lecciones Aprendidas
+
+Estos errores fueron documentados durante la ejecución real de laboratorios de Google Cloud. Son los errores más frecuentes al trabajar con Gemini y Vertex AI.
+
+### Errores de Variables y Nombres
+
+| Error | Causa | Solución |
+|-------|-------|----------|
+| `NameError: name 'instructions' is not defined` | El kernel de Jupyter se reinició y las variables se perdieron. | Volver a ejecutar todas las celdas de configuración desde el principio. |
+| `NameError: name 'instruccion' is not defined` | Typo: falta la 's' final. Python distingue `instruccion` ≠ `instructions`. | Copiar el nombre exacto de la variable tal como aparece en la celda donde fue definida. |
+| `NameError` después de cambiar de tarea | Las variables de la Tarea 1.1 (`prompt1`) se sobreescriben en la Tarea 1.2. | Renombrar variables por tarea (ej: `prompt1_sim`) o redefinirlas justo antes de usarlas. |
+
+### Errores de Funciones y APIs
+
+| Error | Causa | Solución |
+|-------|-------|----------|
+| `TypeError: get_document_metadata() missing 2 required positional arguments` | La función requiere 4 argumentos, no 2. | Pasar: `(modelo, folder_pdf, folder_save, prompt)`. |
+| `TypeError: 'dict' object is not subscriptable` | Intentar acceder a un diccionario con índice numérico `chunks[0]`. | Usar `for key, value in chunks.items()` o `list(chunks.values())[0]`. |
+| `SyntaxError` al pegar código | Comillas invisibles o indentación incorrecta copiada de un navegador. | Borrar toda la celda y reescribir manualmente. |
+
+### Errores de Infraestructura
+
+| Error | Causa | Solución |
+|-------|-------|----------|
+| `FileNotFoundError: Google_Branding/` | Los archivos no se descargaron del bucket. | Ejecutar `!gsutil -m rsync -r gs://spls/gsp520 .` primero. |
+| `403 Forbidden` o `404 Not Found` | El modelo no está habilitado en tu proyecto o la API no está activa. | Ir a Vertex AI > Dashboard > "Enable All Recommended APIs". |
+| `ResourceExhausted (429)` | Se excedió la cuota de la API. | Esperar 30-60 segundos y reintentar. Considerar reducir `batch_size`. |
+
+### Buenas Prácticas para Evitar Errores
+
+1. **Siempre ejecutar las celdas en orden** — Después de un restart del kernel, vuelve a ejecutar desde la primera celda.
+2. **No confiar en variables globales** — Si una celda falla, redefine las variables justo antes de usarlas.
+3. **Verificar la firma de funciones** — Antes de llamar una función de una librería externa, revisar cuántos argumentos espera con `help(función)` o `función?`.
+4. **Usar celdas auto-contenidas** — Cuando el notebook es largo, incluir imports y definiciones en la propia celda.
+
+---
+
 ## Archivos del Skill
 
 - `scripts/embeddings.py` — Funciones para generar embeddings densos y dispersos
 - `scripts/vector_search.py` — Funciones para gestionar índices, endpoints y consultas
 - `scripts/hybrid_search.py` — Funciones para búsqueda híbrida con RRF
-- `examples/` — Ejemplos completos listos para ejecutar
-- `resources/` — Documentación conceptual y guías rápidas
+- `examples/` — Ejemplos ejecutables y notebooks traducidos al español
+- `resources/` — Documentación conceptual y guías de referencia
